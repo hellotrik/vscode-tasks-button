@@ -1,0 +1,65 @@
+{
+    "name": "tasks-button",
+    "displayName": "Tasks Button",
+    "description": "为你的 Tasks 添加 Button",
+    "version": "0.0.1",
+    "icon": "icon.png",
+    "publisher": "quzhen",
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "workspaceContains:.vscode/tasks.json"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/demopath/vscode-tasks-button.git"
+      },
+    "main": "./extension.js",
+    "contributes": {
+        "configuration": {
+            "title": "Tasks Button",
+            "properties": {
+                "tasksButton.tasks": {
+                    "type": "array",
+                    "scope": "window",
+                    "markdownDescription": "点击`settings.json`配置按钮",
+                    "default": [
+                        {
+                            "name": "echo",
+                            "label": "echo",
+                            "tip": "echo tip",
+                            "icon": "feedback"
+                        }
+                    ],
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "按钮显示的名称"
+                            },
+                            "label": {
+                                "type": "string",
+                                "description": "对应 tasks.json 中的任务的 label"
+                            },
+                            "tip": {
+                                "type": "string",
+                                "description": "鼠标悬停时的提示信息"
+                            },
+                            "icon": {
+                                "type": "string",
+                                "description": "按钮图标"
+                            }
+                        },
+                        "required": ["name", "label"],
+                        "additionalProperties": false
+                    }
+                }
+            }
+        }
+    }
+}
