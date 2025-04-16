@@ -2,7 +2,7 @@
     "name": "tasks-button",
     "displayName": "Tasks Button",
     "description": "Tasks Button，为你的 Tasks 添加 Button !",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "icon": "icon.png",
     "publisher": "quzhen",
     "engines": {
