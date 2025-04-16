@@ -1,37 +1,43 @@
 const vscode = require('vscode');
 
-async function createButtons() {
-    const buttons = vscode.workspace.getConfiguration('tasksButton').get('tasks') || [];
-    const tasks = await vscode.tasks.fetchTasks();
-    return buttons
-        .filter(({label}) => tasks.some(task => task.name === label))
-        .map(({icon, name, tip, label}) => {
-            const button = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-            button.text = icon ? `$(${icon}) ${name}` : name;
-            button.tooltip = tip;
-            button.command = { command: 'workbench.action.tasks.runTask', arguments: [label] };
-            return button.show(), button;
-        });
-}
-
 function activate(context) {
-    let statusBarItems = [];
-    const updateButtons = () => createButtons().then(items => {
-        statusBarItems.forEach(item => item.dispose());
-        statusBarItems = items;
-        context.subscriptions.push(...items);
-    });
+    let buttons = [];
+    
+    function updateTaskButtons() {
+        buttons.forEach(btn => btn.dispose());
+        const tasks = vscode.workspace.getConfiguration('tasks').get('tasks') || [];
+        const displayCondition = vscode.workspace.getConfiguration('tasks').get('DisplayCondition') || 'ShowWithIcon';
+        
+        buttons = tasks
+            .filter(task => task.label)
+            .filter(task => {
+                switch(displayCondition) {
+                    case 'ShowAll': return true;
+                    case 'HideAll': return false;
+                    case 'ShowWithIcon': return !!(task.icon?.id);
+                    default: return false;
+                }
+            })
+            .map(task => {
+                const btn = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+                btn.text = task.icon?.id ? `$(${task.icon.id}) ${task.label}` : task.label;
+                btn.color = task.icon?.color || '';
+                btn.tooltip = task.icon?.tooltip;
+                btn.command = { command: 'workbench.action.tasks.runTask', arguments: [task.label] };
+                btn.show();
+                return btn;
+            });
+    }
+
+    updateTaskButtons();
+    
     context.subscriptions.push(
-        vscode.workspace.onDidChangeConfiguration(e => 
-            e.affectsConfiguration('tasksButton.tasks') && updateButtons()
-        )
+        vscode.workspace.onDidChangeConfiguration(e => {
+            e.affectsConfiguration('tasks') && updateTaskButtons();
+        })
     );
-    updateButtons();
 }
 
 function deactivate() {}
 
-module.exports = {
-    activate,
-    deactivate
-}
+module.exports = { activate, deactivate };

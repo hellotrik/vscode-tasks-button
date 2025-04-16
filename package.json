@@ -1,8 +1,8 @@
 {
     "name": "tasks-button",
     "displayName": "Tasks Button",
-    "description": "为你的 Tasks 添加 Button",
-    "version": "0.0.1",
+    "description": "Tasks Button，为你的 Tasks 添加 Button !",
+    "version": "0.0.2",
     "icon": "icon.png",
     "publisher": "quzhen",
     "engines": {
@@ -23,41 +23,12 @@
         "configuration": {
             "title": "Tasks Button",
             "properties": {
-                "tasksButton.tasks": {
-                    "type": "array",
-                    "scope": "window",
-                    "markdownDescription": "点击`settings.json`配置按钮",
-                    "default": [
-                        {
-                            "name": "echo",
-                            "label": "echo",
-                            "tip": "echo tip",
-                            "icon": "feedback"
-                        }
-                    ],
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "description": "按钮显示的名称"
-                            },
-                            "label": {
-                                "type": "string",
-                                "description": "对应 tasks.json 中的任务的 label"
-                            },
-                            "tip": {
-                                "type": "string",
-                                "description": "鼠标悬停时的提示信息"
-                            },
-                            "icon": {
-                                "type": "string",
-                                "description": "按钮图标"
-                            }
-                        },
-                        "required": ["name", "label"],
-                        "additionalProperties": false
-                    }
+                "tasks.displayCondition": {
+                    "type": "string",
+                    "enum": ["ShowAll", "HideAll", "ShowWithIcon"],
+                    "enumDescriptions": ["全部显示", "全部不显示", "仅显示带图标的"],
+                    "default": "ShowWithIcon",
+                    "description": "任务按钮的显示条件"
                 }
             }
         }
