@@ -16,7 +16,7 @@ jobs:
         run: vsce package
 
       - name: Publish Extension
-        run: vsce publish
+        run: vsce publish -p ${{ secrets.VSCE_PAT }}
         
       - name: Upload VSIX as artifact
         uses: actions/upload-artifact@v4
