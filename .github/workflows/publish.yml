@@ -1,0 +1,25 @@
+name: Package VS Code Extension
+
+on: [workflow_dispatch]
+
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      
+      - name: Install vsce
+        run: npm install -g vsce
+        
+      - name: Package extension
+        run: vsce package
+
+      - name: Publish Extension
+        run: vsce publish
+        
+      - name: Upload VSIX as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: ./*.vsix
