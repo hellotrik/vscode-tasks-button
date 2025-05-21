@@ -2,7 +2,7 @@
     "name": "tasks-button",
     "displayName": "Tasks Button",
     "description": "Tasks Button，为你的 Tasks 添加 Button !",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "icon": "icon.png",
     "publisher": "quzhen",
     "engines": {
@@ -18,19 +18,5 @@
         "type": "git",
         "url": "https://github.com/demopath/vscode-tasks-button.git"
       },
-    "main": "./extension.js",
-    "contributes": {
-        "configuration": {
-            "title": "Tasks Button",
-            "properties": {
-                "tasks.displayCondition": {
-                    "type": "string",
-                    "enum": ["ShowAll", "HideAll", "ShowWithIcon"],
-                    "enumDescriptions": ["全部显示", "全部不显示", "仅显示带图标的"],
-                    "default": "ShowWithIcon",
-                    "description": "任务按钮的显示条件"
-                }
-            }
-        }
-    }
+    "main": "./extension.js"
 }
