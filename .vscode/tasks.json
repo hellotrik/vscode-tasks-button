@@ -2,9 +2,13 @@
     "version": "2.0.0",
     "tasks": [
         {
+            // 任务标签
             "label": "echo test",
+            // 命令
             "command": "echo Hello",
+            // 任务类型
             "type": "shell",
+            // 任务图标
             "icon": {"id": "debug", "tooltip":"打印 Hello"}
         }   
     ]

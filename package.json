@@ -2,7 +2,7 @@
     "name": "tasks-button",
     "displayName": "Tasks Button",
     "description": "Tasks Button，为你的 Tasks 添加 Button !",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "icon": "icon.png",
     "publisher": "quzhen",
     "engines": {
@@ -12,7 +12,7 @@
         "Other"
     ],
     "activationEvents": [
-        "workspaceContains:.vscode/tasks.json"
+        "onStartupFinished"
     ],
     "contributes": {
         "commands": [

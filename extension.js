@@ -7,12 +7,71 @@ function activate(context) {
     let fileWatchers = [];
     let refreshButton = null;
 
+    function stripJsonComments(input) {
+        // 兼容 tasks.json 的 JSONC 注释：支持 //... 和 /* ... */，并避免误删字符串中的注释符号。
+        // 采用字符级状态机：在字符串外移除注释，在字符串内保持原样。
+        let output = '';
+        let inString = false;
+        let quoteChar = '';
+        let isEscaped = false;
+
+        for (let i = 0; i < input.length; i++) {
+            const ch = input[i];
+            const next = i + 1 < input.length ? input[i + 1] : '';
+
+            if (!inString) {
+                // 单行注释：// ... \n
+                if (ch === '/' && next === '/') {
+                    i += 1; // 跳过第二个 '/'
+                    while (i + 1 < input.length && input[i + 1] !== '\n') i += 1;
+                    // 允许保留换行符（由循环自然处理到 '\n'）
+                    continue;
+                }
+
+                // 多行注释：/* ... */
+                if (ch === '/' && next === '*') {
+                    i += 1; // 跳过 '*'
+                    while (i + 1 < input.length && !(input[i] === '*' && input[i + 1] === '/')) i += 1;
+                    i += 1; // 跳过 '/'
+                    continue;
+                }
+
+                // 字符串开始
+                if (ch === '"' || ch === '\'') {
+                    inString = true;
+                    quoteChar = ch;
+                }
+
+                output += ch;
+                continue;
+            }
+
+            // inString
+            output += ch;
+            if (isEscaped) {
+                isEscaped = false;
+                continue;
+            }
+            if (ch === '\\') {
+                isEscaped = true;
+                continue;
+            }
+            if (ch === quoteChar) {
+                inString = false;
+                quoteChar = '';
+            }
+        }
+
+        return output;
+    }
+
     function readTasksFromFile(workspaceFolder) {
         const tasksJsonPath = path.join(workspaceFolder.uri.fsPath, '.vscode', 'tasks.json');
         try {
             if (fs.existsSync(tasksJsonPath)) {
                 const content = fs.readFileSync(tasksJsonPath, 'utf8');
-                const tasksConfig = JSON.parse(content);
+                const jsonText = stripJsonComments(content);
+                const tasksConfig = JSON.parse(jsonText);
                 return tasksConfig.tasks || [];
             }
         } catch (error) {
